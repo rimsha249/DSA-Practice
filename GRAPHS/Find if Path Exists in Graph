@@ -1,0 +1,40 @@
+class Solution {
+public:
+
+vector<int>parent;
+vector<int>size;
+
+int findParent(int node){
+    if(parent[node]==node) return node;
+
+    return parent[node]=findParent(parent[node]);
+}
+void unionBySize(int u,int v){
+    int pu=findParent(u);
+    int pv=findParent(v);
+    if(pu==pv) return;
+    if(size[pu]<size[pv]){
+        parent[pu]=pv;
+        size[pv]+=size[pu];
+    }
+    else{
+          parent[pv]=pu;
+        size[pu]+=size[pv];
+    }
+}
+    bool validPath(int n, vector<vector<int>>& edges, int source, int destination) {
+        parent.resize(n);
+        size.resize(n,1);
+
+        for(int i=0;i<n;i++){
+            parent[i]=i;
+        }
+        for(auto edge:edges){
+            int u=edge[0];
+            int v=edge[1];
+
+            unionBySize(u,v);
+        }
+        return findParent(source)==findParent(destination);
+    }
+};
